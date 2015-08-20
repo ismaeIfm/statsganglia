@@ -46,30 +46,38 @@ get_jobsnames <- function(messages){
   return(table(lapply(messages[4],get_jobname_from_message)))
 }
 
-get_messages_from_date <- function(messages, date){
-  
+get_messages_by_type <- function(messages, type){
+  messages_type <- switch(type, "A" = messages[messages$V2=="A",], "C" = messages[messages$V2=="C",], "D" = messages[messages$V2=="D",], "E" = messages[messages$V2=="E",], "Q" = messages[messages$V2=="Q",], "R" = messages[messages$V2=="R",], "S" = messages[messages$V2=="S",], "T" = messages[messages$V2=="T",])
+  return(messages_type)
 }
+
+get_users_by_message_type <- function(messages, type){
+  messages_by_type <- get_messages_by_type(messages, type)
+  users_names <- table(lapply(messages_by_type[4],get_user_from_message)) 
+  return(users_names)
+}
+
+get_messages_by_date <- function(messages, date, fun){
+  messages[fun(as.POSIXct(messages$V1, format = "%m/%d/%Y %H:%M:%S"), date),]
+}
+
+#prueba <- data[,c('V2', 'V4')]
 
 
 data <- read_directory("/home/ismael/Desktop/accounting/")
 occurences <- get_summary(data)
 
-occurences
+started_jobs <- get_messages_by_type(data, "S")
 
+num_users_started_jobs <- get_users_by_message_type(data, "S")
 
-#jobs <- table(unlist(data[3]))
+num_users_started_jobs
 
-#prueba <- data[,c('V2', 'V4')]
-
-#jobs
-
-started_jobs <- data[data$V2=="S",]
-tail(num_users_started_jobs)
-
-num_users_started_jobs <- table(lapply(started_jobs[4],get_user_from_message))
 get_user_jobs("natorro", data)
 names <- get_jobsnames(data)
 
+last_christmas_date <- as.POSIXct("12/25/2014 08:32:07", format = "%m/%d/%Y %H:%M:%S")
+
+messages_since_last_christmas <- get_messages_by_date(data, last_christmas_date, `<`)
 
 
-strptime("02/10/2014 16:07:58", format = "%d/%m/%Y %H:%M:%S")
