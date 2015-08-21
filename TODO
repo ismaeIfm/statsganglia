@@ -1,6 +1,16 @@
+- Change name of files to reflect a better coding style
+- Modify code to reflect R coding style
+- Add .gitignore to maintain a clean code up in github.com
+- Generate project with RStudio to be able to use git inside RStudio
+
+
 Features to add in shiny app: 
 
 - Be able to select range of dates and validate dates
 - Select between graphs by user by status
-- Examine specific users
--  
+- Examine specific users 
+
+Features to add in knitr report
+
+- Learn knitr
+- Create the same reports that can be done in shiny into a knitr report
