@@ -1,6 +1,3 @@
-
-
-
 read_file <- function(name_file){
   data_f <- read.table(name_file, sep=";", flush=TRUE)
   return(data_f)
