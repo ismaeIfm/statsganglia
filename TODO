@@ -2,7 +2,6 @@ URGENT CHANGES:
 
 - Change name of files to reflect a better coding style
 - Modify code to reflect R coding style
-- Add .gitignore to maintain a clean code up in github.com
 - Generate project with RStudio to be able to use git inside RStudio
 
 
