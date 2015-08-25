@@ -15,8 +15,8 @@ ReadDirectory <- function(name.directory) {
   dataDirectory <- data.frame()
   files <- list.files(name.directory)
   for (i in files){
-    nameFile <- paste(name.directory,i, sep= "")
-    dataFile <- read.table(nameFile, sep=";", flush=TRUE)
+    nameFile <- paste(name.directory,i, sep = "")
+    dataFile <- read.table(nameFile, sep = ";", flush = TRUE)
     dataDirectory <- rbind(dataDirectory, dataFile, deparse.level = 1)
   }
   return(dataDirectory)
@@ -46,7 +46,7 @@ GetUserFromMessage <- function(message) {
   # Returns:
   #   The string of he username if it is present
   userExpr <- "user=[a-z]+"
-  m <- regexpr(userExpr, message, perl=TRUE)
+  m <- regexpr(userExpr, message, perl = TRUE)
   match <- regmatches(message, m)
   return(substring(match, nchar("user=") + 1))
 }
@@ -61,7 +61,7 @@ GetRequestorFromMessage <- function(message) {
   # Returns:
   #   The string of he requestor user if it is present
   userExpr <- "requestor=[a-z]+"
-  m <- regexpr(userExpr, message, perl=TRUE)
+  m <- regexpr(userExpr, message, perl = TRUE)
   match <- regmatches(message, m)
   return(substring(match, nchar("requestor=") + 1))
 }
@@ -76,7 +76,7 @@ GetJobnameFromMessage <- function(message) {
   # Returns:
   #   The string of he jobname if it is present
   jobnameExpr <- "jobname=[a-zA-Z.0-9]+"#Falta añadir la diagonal
-  m <- regexpr(jobnameExpr, message, perl=TRUE)
+  m <- regexpr(jobnameExpr, message, perl = TRUE)
   match <- regmatches(message, m)
   return(substring(match, nchar("jobname=") + 1))
 }
@@ -90,7 +90,7 @@ PlotDataSummary <- function(data) {
   #
   # Returns:
   #   The plot.
-  qplot(V2, data=data, geom="histogram")
+  qplot(V2, data=data, geom = "histogram")
 }
 
 PlotHistRequestors <- function(data) {
@@ -103,7 +103,7 @@ PlotHistRequestors <- function(data) {
   # Returns:
   #   The plot.
   requestors <- data.frame(lapply(data[4], GetRequestorFromMessage))
-  qplot(V4, data=requestors, geom="histogram")
+  qplot(V4, data=requestors, geom = "histogram")
 }
 
 PlotHistUsers <- function(data) {
@@ -116,7 +116,7 @@ PlotHistUsers <- function(data) {
   # Returns:
   #   The plot.
   users <- data.frame(lapply(data[4], GetUserFromMessage))
-  qplot(V4, data=users, geom="histogram")#Add log
+  qplot(V4, data=users, geom="histogram")
 }
 
 
@@ -130,7 +130,7 @@ PlotHistJobs <- function(data) {
   # Returns:
   #   The plot.
   jobsnames <- data.frame(lapply(data[4], GetJobnameFromMessage))
-  qplot(V4, data=jobsnames, geom="histogram")
+  qplot(V4, data=jobsnames, geom = "histogram")
 }
 
 GetUserJobs <- function (user.name, data) {
@@ -142,7 +142,7 @@ GetUserJobs <- function (user.name, data) {
   #
   # Returns:
   #   A table that contains all the jobs belonging to the user.
-  userString <- paste("user=", user.name, sep="")
+  userString <- paste("user=", user.name, sep = "")
   userJobs <- data[grep(userString, data$V4), ]
   userJobsname <- table(lapply(userJobs[4], GetJobnameFromMessage))
  return(userJobsname)
@@ -168,11 +168,11 @@ GetDataByType <- function(data, type) {
   #
   # Returns:
   #   A table that contains all the data of a single type.s
-  dataByType <- switch(type, "A" = data[data$V2=="A", ],
-                       "C" = data[data$V2=="C", ], "D" = data[data$V2=="D", ],
-                       "E" = data[data$V2=="E", ], "Q" = data[data$V2=="Q", ], 
-                       "R" = data[data$V2=="R", ], "S" = data[data$V2=="S", ],
-                       "T" = data[data$V2=="T", ])
+  dataByType <- switch(type, "A" = data[data$V2 == "A", ],
+                       "C" = data[data$V2 == "C", ], "D" = data[data$V2 == "D", ],
+                       "E" = data[data$V2 == "E", ], "Q" = data[data$V2 == "Q", ], 
+                       "R" = data[data$V2 == "R", ], "S" = data[data$V2 == "S", ],
+                       "T" = data[data$V2 == "T", ])
   return(dataByType)
 }
 #Reads the files in the directory
