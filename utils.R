@@ -36,6 +36,23 @@ GetDataByDate <- function(data, date, fun) {
   return(data[fun(as.POSIXct(data$V1, format = "%m/%d/%Y %H:%M:%S"), date), ])
 }
 
+GetDataByRange<-function(data,initialDate,finalDate){
+  # Filters data by range.
+  #
+  # Args:
+  #   data: Data from accounting logs of torque.
+  #   initialDate: Start range.
+  #   finalDate: Complete range.
+  #
+  # Returns:
+  #   A data set that contains all the data contained in the range
+  return(subset(as.POSIXct(data$V1, format = "%m/%d/%Y %H:%M:%S"), 
+                as.POSIXct(data$V1, format = "%m/%d/%Y %H:%M:%S") > as.POSIXct(initialDate, format = "%m/%d/%Y %H:%M:%S")
+                &as.POSIXct(data$V1, format = "%m/%d/%Y %H:%M:%S") < as.POSIXct(finalDate, format = "%m/%d/%Y %H:%M:%S")
+                )
+        )
+}
+
 GetUserFromMessage <- function(message) {
   # Extracts the username from a message 
   # 
