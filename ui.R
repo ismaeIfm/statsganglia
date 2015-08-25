@@ -12,22 +12,27 @@ shinyUI(fluidPage(
   fluidRow(
     
     column(3,
-           dateRangeInput("dates", label = h3("Date range"))),
+           dateRangeInput("dates", label = h3("Rango de Fechas"))),
     
     column(3, 
-           textInput("text", label = h3("Text input"), 
+           textInput("text", label = h3("Búsqueda"), 
                      value = "Enter text..."))
   ),  
   sidebarLayout(
     sidebarPanel(  checkboxGroupInput("checkGroup", 
-                                      label = h3("Checkbox group"), 
-                                      choices = list("Choice 1" = 1, 
-                                                     "Choice 2" = 2, "Choice 3" = 3),
-                                      selected = 1),  
-                   selectInput("select", label = h3("Select box"), 
-                                                                  choices = list("Choice 1" = 1, "Choice 2" = 2,
-                                                                                 "Choice 3" = 3), selected = 1)),
-    mainPanel("main panel")
+                                      label = h3("Record Type"), 
+                                      choices = list("Abort" = 1, 
+                                                     "Checkpoint" = 2, 
+                                                     "Delete" = 3, 
+                                                     "Exit" = 4, 
+                                                     "Queue" = 5, 
+                                                     "Rerun" = 6, 
+                                                     "Start" = 7, 
+                                                     "Restart" = 8 ), selected = c(1,2,3,4,5,6,7,8)),  
+                   selectInput("select", label = h3("Usuario"), 
+                                                                  choices = list("Todos" = 1, "Usuario 1" = 2, "Usuario 2" = 3,
+                                                                                 "Usuario 3" = 4), selected = 1)),
+    mainPanel(  plotOutput("text1"))
   )
 
   

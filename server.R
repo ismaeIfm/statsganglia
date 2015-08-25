@@ -6,9 +6,33 @@
 #
 
 library(shiny)
+library(ggplot2)
+source("utils.R")
+
+#Reads the files in the directory
+accounting <- ReadDirectory("/home/ismael/Desktop/accounting/")
 
 shinyServer(function(input, output) {
 
-  
+  output$text1 <- renderPlot({ 
+    PlotDataSummary(accounting)#Plots the data by message type
+  })
 
 })
+
+#Creates a date
+lastChristmasDate <- as.POSIXct("12/25/2014 08:32:07", format = "%m/%d/%Y %H:%M:%S")
+
+#Gets data which date is minor to the date specified
+messagesSinceLastChristmas <- GetDataByDate(accounting, lastChristmasDate, `<`)
+
+PlotHistRequestors(accounting)#Plots the data my requestors
+PlotHistUsers(accounting)#Plots the data by users
+PlotHistJobs(accounting)#Plots the data by job
+
+GetUserJobs("natorro", accounting)#Gets the jobs of the user natorro in a table
+
+GetJobsnames(accounting)#Gets the jobs of the data in a table
+
+GetDataByType(accounting, "S")#Filters the data by record marker
+
