@@ -1,141 +1,198 @@
 library(ggplot2)
 
-read_file <- function(name_file){
-  data_f <- read.table(name_file, sep=";", flush=TRUE)
-  return(data_f)
-}
-
-read_directory <- function(name_directory){
-  data_directory <- data.frame()
-  files <- list.files(name_directory)
-  for(i in files){
-    data_file <- read_file(paste(name_directory,i, sep= ""))
-    data_directory <- rbind(data_directory, data_file, deparse.level = 1)#, make.row.names = TRUE)
+ReadDirectory <- function(name.directory) {
+  # Reads all the files of a directory. Each file is readed in table format to 
+  # create a data frame from it. All the data frames are combined into one.
+  # The directory must contain only accounting logs from torque separated 
+  # by a semicolon ";".
+  # 
+  # Args:
+  #   name.directory: The path of the directory to be readed.
+  #
+  # Returns:
+  #   A data frame that contains all the files of the directory name.directory 
+  #   readed in table format and combined.
+  dataDirectory <- data.frame()
+  files <- list.files(name.directory)
+  for (i in files){
+    nameFile <- paste(name.directory,i, sep= "")
+    dataFile <- read.table(nameFile, sep=";", flush=TRUE)
+    dataDirectory <- rbind(dataDirectory, dataFile, deparse.level = 1)
   }
-  return(data_directory)
+  return(dataDirectory)
 }
 
-get_data_by_date <- function(data, date, fun){
-  messages[fun(as.POSIXct(data$V1, format = "%m/%d/%Y %H:%M:%S"), date),]
+
+GetDataByDate <- function(data, date, fun) {
+  # Filters data by date.
+  # 
+  # Args:
+  #   data: Data from accounting logs of torque.
+  #   date: A date as a starting point for comparison.
+  #   fun: A comparable function.
+  #
+  # Returns:
+  #   A data frame that contains all the data that satisfies comparing it with the date using fun.
+  data[fun(as.POSIXct(data$V1, format = "%m/%d/%Y %H:%M:%S"), date), ]
 }
 
-get_user_from_message <- function(message){
- user_expr <- "user=[a-z]+"
- m <- regexpr(user_expr, message, perl=TRUE)
- match <- regmatches(message, m)
- return(substring(match, nchar("user=") + 1))
+GetUserFromMessage <- function(message) {
+  # Extracts the username from a message 
+  # 
+  # Args:
+  #   message: A message from accounting logs from torque. The fourth column
+  #           of a line from a accounting log file.
+  #
+  # Returns:
+  #   The string of he username if it is present
+  userExpr <- "user=[a-z]+"
+  m <- regexpr(userExpr, message, perl=TRUE)
+  match <- regmatches(message, m)
+  return(substring(match, nchar("user=") + 1))
 }
 
-get_requestor_from_message <- function(message){
-  user_expr <- "requestor=[a-z]+"
-  m <- regexpr(user_expr, message, perl=TRUE)
+GetRequestorFromMessage <- function(message) {
+  # Extracts the requestor user from a message 
+  # 
+  # Args:
+  #   message: A message from accounting logs from torque. The fourth column
+  #           of a line from a accounting log file.
+  #
+  # Returns:
+  #   The string of he requestor user if it is present
+  userExpr <- "requestor=[a-z]+"
+  m <- regexpr(userExpr, message, perl=TRUE)
   match <- regmatches(message, m)
   return(substring(match, nchar("requestor=") + 1))
 }
 
-get_jobname_from_message <- function(message){
-  jobname_expr <- "jobname=[a-zA-Z.0-9]+"#Falta añadir la diagonal
-  m <- regexpr(jobname_expr, message, perl=TRUE)
+GetJobnameFromMessage <- function(message) {
+  # Extracts the jobname from a message 
+  # 
+  # Args:
+  #   message: A message from accounting logs from torque. The fourth column
+  #           of a line from a accounting log file.
+  #
+  # Returns:
+  #   The string of he jobname if it is present
+  jobnameExpr <- "jobname=[a-zA-Z.0-9]+"#Falta añadir la diagonal
+  m <- regexpr(jobnameExpr, message, perl=TRUE)
   match <- regmatches(message, m)
   return(substring(match, nchar("jobname=") + 1))
 }
 
-plot_data_summary <- function(messages){
-  qplot(V2, data=messages, geom="histogram")
-  
+PlotDataSummary <- function(data) {
+  # Plots a histogram of the data classified by message type. The plot is 
+  # generated using ggplot2.
+  # 
+  # Args:
+  #   data: Data from accounting logs of torque.
+  #
+  # Returns:
+  #   The plot.
+  qplot(V2, data=data, geom="histogram")
 }
 
-plot_hist_requestors <- function(data){
-  requestors <- data.frame(lapply(data[4],get_requestor_from_message))
+PlotHistRequestors <- function(data) {
+  # Plots a histogram of the requestors appearing in the data. The plot is 
+  # generated using ggplot2.
+  # 
+  # Args:
+  #   data: Data from accounting logs of torque.
+  #
+  # Returns:
+  #   The plot.
+  requestors <- data.frame(lapply(data[4], GetRequestorFromMessage))
   qplot(V4, data=requestors, geom="histogram")
 }
 
-plot_hist_users <- function(data){
-  users <- data.frame(lapply(data[4],get_user_from_message))
+PlotHistUsers <- function(data) {
+  # Plots a histogram of the users appearing in the data. The plot is 
+  # generated using ggplot2.
+  # 
+  # Args:
+  #   data: Data from accounting logs of torque.
+  #
+  # Returns:
+  #   The plot.
+  users <- data.frame(lapply(data[4], GetUserFromMessage))
   qplot(V4, data=users, geom="histogram")#Add log
 }
 
 
-plot_hist_jobs <- function(data){
-  jobsnames <- data.frame(lapply(data[4],get_jobname_from_message))
+PlotHistJobs <- function(data) {
+  # Plots a histogram of the jobs appearing in the data. The plot is 
+  # generated using ggplot2.
+  # 
+  # Args:
+  #   data: Data from accounting logs of torque.
+  #
+  # Returns:
+  #   The plot.
+  jobsnames <- data.frame(lapply(data[4], GetJobnameFromMessage))
   qplot(V4, data=jobsnames, geom="histogram")
 }
 
-plot_data_summary(accounting)
-plot_hist_requestors(accounting)
-plot_hist_users(accounting)
-plot_hist_jobs(accounting)
-
-
-
-prueba <- data.frame(lapply(data[4],get_user_from_message))
-
-
-get_user_jobs <- function (user_name, all_jobs){
-  user_string <- paste("user=", user_name, sep="")
-  user_jobs <- all_jobs[grep(user_string, all_jobs$V4),]
-  user_jobsname <- table(lapply(user_jobs[4],get_jobname_from_message))
- return(user_jobsname)
+GetUserJobs <- function (user.name, data) {
+  # Get all the jobs belonging to a user
+  # 
+  # Args:
+  #   user.name: Name of the user.
+  #   data: Data from accounting logs of torque.
+  #
+  # Returns:
+  #   A table that contains all the jobs belonging to the user.
+  userString <- paste("user=", user.name, sep="")
+  userJobs <- data[grep(userString, data$V4), ]
+  userJobsname <- table(lapply(userJobs[4], GetJobnameFromMessage))
+ return(userJobsname)
 }
 
-get_jobsnames <- function(messages){
-  return(table(lapply(messages[4],get_jobname_from_message)))
+GetJobsnames <- function(data) {
+  # Get all the jobs from the data
+  # 
+  # Args:
+  #   data: Data from accounting logs of torque.
+  #
+  # Returns:
+  #   A table that contains all the jobs from the data.
+  return(table(lapply(data[4], GetJobnameFromMessage)))
 }
 
-get_messages_by_type <- function(messages, type){
-  messages_type <- switch(type, "A" = messages[messages$V2=="A",], "C" = messages[messages$V2=="C",], "D" = messages[messages$V2=="D",], "E" = messages[messages$V2=="E",], "Q" = messages[messages$V2=="Q",], "R" = messages[messages$V2=="R",], "S" = messages[messages$V2=="S",], "T" = messages[messages$V2=="T",])
-  return(messages_type)
+GetDataByType <- function(data, type) {
+  # Filters the data by type of Record Marker
+  # 
+  # Args:
+  #   data: Data from accounting logs of torque.
+  #   type: Record marker type. 
+  #
+  # Returns:
+  #   A table that contains all the data of a single type.s
+  dataByType <- switch(type, "A" = data[data$V2=="A", ],
+                       "C" = data[data$V2=="C", ], "D" = data[data$V2=="D", ],
+                       "E" = data[data$V2=="E", ], "Q" = data[data$V2=="Q", ], 
+                       "R" = data[data$V2=="R", ], "S" = data[data$V2=="S", ],
+                       "T" = data[data$V2=="T", ])
+  return(dataByType)
 }
+#Reads the files in the directory
+accounting <- ReadDirectory("/home/ismael/Desktop/accounting/")
 
-get_users_by_message_type <- function(messages, type){
-  messages_by_type <- get_messages_by_type(messages, type)
-  users_names <- table(lapply(messages_by_type[4],get_user_from_message)) 
-  return(users_names)
-}
+#Creates a date
+lastChristmasDate <- as.POSIXct("12/25/2014 08:32:07", format = "%m/%d/%Y %H:%M:%S")
 
+#Gets data which date is minor to the date specified
+messagesSinceLastChristmas <- GetDataByDate(accounting, lastChristmasDate, `<`)
 
-#prueba <- data[,c('V2', 'V4')]
+PlotDataSummary(accounting)#Plots the data by message type
+PlotHistRequestors(accounting)#Plots the data my requestors
+PlotHistUsers(accounting)#Plots the data by users
+PlotHistJobs(accounting)#Plots the data by job
 
+GetUserJobs("natorro", accounting)#Gets the jobs of the user natorro in a table
 
-accounting <- read_directory("/home/ismael/Desktop/accounting/")
+GetJobsnames(accounting)#Gets the jobs of the data in a table
 
-data <- set_user_to_message(data)
-
-plot_summary(data)
-
-started_jobs <- get_messages_by_type(data, "S")
-
-
-started_jobs
-num_users_started_jobs <- get_users_by_message_type(data, "S")
-
-prueba <- data.frame(started_jobs, user= get_user_from_message(started_jobs$V4))
-qplot(user, data=prueba, geom="histogram")
+GetDataByType(accounting, "S")#Filters the data by record marker
 
 
-
-num_users_started_jobs
-
-get_user_jobs("natorro", data)
-names <- get_jobsnames(data)
-
-last_christmas_date <- as.POSIXct("12/25/2014 08:32:07", format = "%m/%d/%Y %H:%M:%S")
-
-messages_since_last_christmas <- get_messages_by_date(data, last_christmas_date, `<`)
-
-
-
-prueba <- as.data.frame(occurences, row.names = NULL,responseName = "Freq", stringsAsFactors = TRUE,sep = "", base = list(LETTERS))
-ggplot(data=prueba, aes(x=Var1, y=Freq)) + geom_line()
-
-qplot(x = Var1,  data=prueba)
-qplot(V2, data=data, geom="histogram")
-
-
-
-get_user
-
-prueba
-
-midataframe <- data.frame(a=c(1,2,3), b=c(2,4,6))
-data.frame(midataframe, c=midataframe$a)
