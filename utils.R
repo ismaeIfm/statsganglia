@@ -33,7 +33,7 @@ GetDataByDate <- function(data, date, fun) {
   #
   # Returns:
   #   A data frame that contains all the data that satisfies comparing it with the date using fun.
-  data[fun(as.POSIXct(data$V1, format = "%m/%d/%Y %H:%M:%S"), date), ]
+  return(data[fun(as.POSIXct(data$V1, format = "%m/%d/%Y %H:%M:%S"), date), ])
 }
 
 GetUserFromMessage <- function(message) {
