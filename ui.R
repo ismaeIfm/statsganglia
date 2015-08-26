@@ -12,7 +12,7 @@ shinyUI(fluidPage(
   fluidRow(
     
     column(3,
-           dateRangeInput("dates", label = h3("Rango de Fechas"))),
+           dateRangeInput("dates", label = h3("Rango de Fechas"), start= "2014-02-10", min = "2014-02-10")),
     
     column(3, 
            textInput("text", label = h3("Búsqueda"), 

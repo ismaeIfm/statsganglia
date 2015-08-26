@@ -11,12 +11,19 @@ source("utils.R")
 
 #Reads the files in the directory
 accounting <- ReadDirectory("/home/ismael/Desktop/accounting/")
+selectedMessageTypes <- c("Abort", "Checkpoint", "Delete", "Exit", "Queue", "Rerun", "Start", "Restart")
 
 shinyServer(function(input, output) {
-
+  
   output$text1 <- renderPlot({ 
-    PlotDataSummary(accounting)#Plots the data by message type
+    sessionData <- GetDataByDate(accounting, as.POSIXct(input$dates[1]), `>=`)
+    sessionData <- GetDataByDate(sessionData, as.POSIXct(input$dates[2]), `<=`)
+    PlotDataSummary(sessionData)#Plots the data by message type
+   
   })
+
+  
+ 
 
 })
 
