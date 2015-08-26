@@ -57,7 +57,7 @@ GetDateByRange<-function(data,initialDate,finalDate){
   return(data)
 }
 
-GetDataAndMessageByRange<-function(data,initialDate,finalDate){
+GetDateAndMessageByRange<-function(data,initialDate,finalDate){
   # Filters data by time range, return dates and messages
   #
   # Args:
