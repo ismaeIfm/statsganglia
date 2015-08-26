@@ -77,6 +77,33 @@ GetDateAndMessageByRange<-function(data,initialDate,finalDate){
   return(data)
 }
 
+GetDateMessageAndUserByRange<-function(data,initialDate,finalDate){
+  
+  data<-GetDateAndMessageByRange(data,initialDate,finalDate)
+  userExpr <- "user=[a-z]+"
+  m <- regexpr(userExpr,data$message, perl = TRUE)
+  data <- cbind(data,m)
+  date<-subset(data, data$m == 1,select = c(date,message,m))
+  user <- regmatches(data$message, data$m)
+  user <- substring(user, nchar("user=") + 1)
+  data <- cbind(date,user)
+  data <- data[,-3]
+  return(data)
+}
+
+GetDateMessageUserAndJobByRange<-function(data,initialDate,finalDate){
+  
+  data<-GetDateMessageAndUserByRange(data,initialDate,finalDate)
+  jobnameExpr <- "jobname=[a-zA-Z.0-9]+"
+  m <- regexpr(jobnameExpr, data$message, perl = TRUE)
+  data <- cbind(data,m)
+  date <- subset(data, data$m == 28,select = c(date,message,user,m))
+  jobname <- regmatches(data$message, data$m)
+  jobname <- substring(jobname, nchar("jobname=") + 1)
+  data <- cbind(date,jobname)
+  data <- data[,-4]
+  return(data)
+}
 
 GetUserFromMessage <- function(message) {
   # Extracts the username from a message 
