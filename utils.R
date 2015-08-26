@@ -57,6 +57,25 @@ GetDataByRange<-function(data,initialDate,finalDate){
   return(data)
 }
 
+GetDataAndMessageByRange<-function(data,initialDate,finalDate){
+  # Filters data by time range, return dates and messages
+  #
+  # Args:
+  #   data: Data from accounting logs of torque.
+  #   initialDate: Start range.
+  #   finalDate: Complete range.
+  #
+  # Returns:
+  #   A data frame that contains all the data and messages contained in the range
+  data$V1<-as.POSIXct(data$V1, format = "%m/%d/%Y %H:%M:%S")
+  data<-as.data.frame(subset(data,
+                               data$V1 > as.POSIXct(initialDate, format = "%m/%d/%Y %H:%M:%S")&
+                               data$V1 < as.POSIXct(finalDate, format = "%m/%d/%Y %H:%M:%S"), 
+                               select = c(V1,V4))
+                     )
+  return(data)
+}
+
 GetUserFromMessage <- function(message) {
   # Extracts the username from a message 
   # 
