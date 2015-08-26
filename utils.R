@@ -45,12 +45,16 @@ GetDataByRange<-function(data,initialDate,finalDate){
   #   finalDate: Complete range.
   #
   # Returns:
-  #   A data set that contains all the data contained in the range
-  return(subset(as.POSIXct(data$V1, format = "%m/%d/%Y %H:%M:%S"), 
-                as.POSIXct(data$V1, format = "%m/%d/%Y %H:%M:%S") > as.POSIXct(initialDate, format = "%m/%d/%Y %H:%M:%S")
-                &as.POSIXct(data$V1, format = "%m/%d/%Y %H:%M:%S") < as.POSIXct(finalDate, format = "%m/%d/%Y %H:%M:%S")
-                )
-        )
+  #   A data frame that contains all the data contained in the range
+  data<-as.data.frame(subset(as.POSIXct(data$V1, format = "%m/%d/%Y %H:%M:%S"), 
+                             as.POSIXct(data$V1, format = "%m/%d/%Y %H:%M:%S") > 
+                             as.POSIXct(initialDate, format = "%m/%d/%Y %H:%M:%S")&
+                             as.POSIXct(data$V1, format = "%m/%d/%Y %H:%M:%S") < 
+                             as.POSIXct(finalDate, format = "%m/%d/%Y %H:%M:%S")
+                             )       
+                      )
+  colnames(data)<-c("V1")
+  return(data)
 }
 
 GetUserFromMessage <- function(message) {
