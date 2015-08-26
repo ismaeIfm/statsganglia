@@ -36,7 +36,7 @@ GetDataByDate <- function(data, date, fun) {
   return(data[fun(as.POSIXct(data$V1, format = "%m/%d/%Y %H:%M:%S"), date), ])
 }
 
-GetDataByRange<-function(data,initialDate,finalDate){
+GetDateByRange<-function(data,initialDate,finalDate){
   # Filters data by range.
   #
   # Args:
