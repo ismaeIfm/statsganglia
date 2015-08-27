@@ -97,11 +97,11 @@ GetDateMessageUserAndJobByRange<-function(data,initialDate,finalDate){
   jobnameExpr <- "jobname=[a-zA-Z.0-9]+"
   m <- regexpr(jobnameExpr, data$message, perl = TRUE)
   data <- cbind(data,m)
-  date <- subset(data, data$m == 28,select = c(date,message,user,m))
+  date <- subset(data, data$m != (-1),select = c(date,message,user,m))
   jobname <- regmatches(data$message, data$m)
   jobname <- substring(jobname, nchar("jobname=") + 1)
   data <- cbind(date,jobname)
-  data <- data[,-4]
+  data$m <- NULL
   return(data)
 }
 
@@ -214,7 +214,7 @@ GetUserJobs <- function (user.name, data) {
   userString <- paste("user=", user.name, sep = "")
   userJobs <- data[grep(userString, data$V4), ]
   userJobsname <- table(lapply(userJobs[4], GetJobnameFromMessage))
- return(userJobsname)
+  return(userJobsname)
 }
 
 GetJobsnames <- function(data) {
