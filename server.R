@@ -31,7 +31,7 @@ shinyServer(function(input, output,session) {
     sessionData <- GetDataByDate(sessionData, as.POSIXct(input$dates[1]), `>=`)
     sessionData <- GetDataByDate(sessionData, as.POSIXct(input$dates[2]), `<=`)
     users <- GetUsers(sessionData)
-    updateSelectInput(session, "select", choices = as.character(unique(prueba)$V4))
+    updateSelectInput(session, "select", choices = as.character(unique(users)$V4))
     PlotHistUsers(users)
   })
 
