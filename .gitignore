@@ -2,5 +2,6 @@
 .Rproj.user
 .Rhistory
 accounting
-*.zip 
-~* 
+*zip 
+*~
+ 
