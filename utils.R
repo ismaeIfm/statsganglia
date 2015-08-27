@@ -118,6 +118,23 @@ GetDateMessageUserJobAndNcupsByRange<-function(data,initialDate,finalDate){
   return(data)
 }
 
+GetDateMessageUserJobNcupsAndPpnByRange<-function(data,initialDate,finalDate){
+  data<-GetDateMessageUserJobAndNcupsByRange(data,initialDate,finalDate)
+  exehostExpr="exec[_]host=node[0-9]{1,3}[/][0-9]{1,3}"
+  m <- regexpr(exehostExpr,data$message, perl = TRUE) 
+  data<-cbind(data,m)
+  date <- subset(data, data$m != (-1),select = c(date,message,user,jobname,Ncpu,m))
+  Node <- regmatches(data$message,data$m)
+  Node <- substring(Node, nchar("exec_host=node")+1)
+  x<-regexpr("[/]",Node)
+  Ppn<-substring(Node,(x+1))
+  Node<-substring(Node,1,(x-1))
+  data<-cbind(date,Node)
+  data<-cbind(data,Ppn)
+  data$m<-NULL
+  return(data)
+}
+
 GetUserFromMessage <- function(message) {
   # Extracts the username from a message 
   # 
