@@ -130,7 +130,7 @@ GetDateMessageUserJobNcupsAndPpnByRange<-function(data,initialDate,finalDate){
   Ppn<-substring(Node,(x+1))
   Node<-substring(Node,1,(x-1))
   data<-cbind(date,Node)
-  data<-cbind(data,Ppn)
+  data<-cbind(date,Ppn)
   data$m<-NULL
   return(data)
 }
