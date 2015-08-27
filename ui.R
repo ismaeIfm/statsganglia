@@ -30,7 +30,7 @@ shinyUI(fluidPage(
                                                      "Start" = "S", 
                                                      "Restart" = "T" ), selected = c("A","C","D","E","Q","R","S","T"))
                    ),
-    mainPanel(plotOutput("users"), selectInput("select", label = h3("Usuario"), choices=c("todos" = 1)), plotOutput("summary"))#, plotOutput("jobs"))# 
+    mainPanel(plotOutput("summary"), h1("Uso por usuario"), plotOutput("users"), selectInput("select", label = h3("Usuario"), choices=c(" " = 1)))#, plotOutput("jobs"))# 
   )
 
   
