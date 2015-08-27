@@ -9,8 +9,8 @@ library(shiny)
 library(ggplot2)
 source("utils.R")
 
-#Reads the files in the directory
-#accounting <- ReadDirectory("/home/ismael/Desktop/accounting/")
+# Change path to reflect your files and read the files in the directory
+accounting <- ReadDirectory("accounting")
 
 
 
