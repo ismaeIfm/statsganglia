@@ -105,6 +105,51 @@ GetDateMessageUserAndJobByRange<-function(data,initialDate,finalDate){
   return(data)
 }
 
+GetDateMessageUserJobAndNcupsByRange<-function(data,initialDate,finalDate){
+  data<-GetDateMessageUserAndJobByRange(data,initialDate,finalDate)
+  ncpuExpr <- "source[_]List[.]ncpus=[0-9]{1,3}"
+  m <- regexpr(ncpuExpr,data$message, perl = TRUE)
+  data <- cbind(data,m)
+  date <- subset(data, data$m != (-1),select = c(date,message,user,jobname,m))
+  Ncpu <- regmatches(data$message, data$m)
+  Ncpu <- substring(Ncpu, nchar("source_List.ncpus=") + 1)
+  data <- cbind(date,Ncpu)
+  data$m <- NULL
+  return(data)
+}
+
+GetDateMessageUserJobNcupsAndPpnByRange<-function(data,initialDate,finalDate){
+  data<-GetDateMessageUserJobAndNcupsByRange(data,initialDate,finalDate)
+  exehostExpr="exec[_]host=node[0-9]{1,3}[/][0-9]{1,3}"
+  m <- regexpr(exehostExpr,data$message, perl = TRUE) 
+  data<-cbind(data,m)
+  date <- subset(data, data$m != (-1),select = c(date,message,user,jobname,Ncpu,m))
+  Node <- regmatches(data$message,data$m)
+  Node <- substring(Node, nchar("exec_host=node")+1)
+  x<-regexpr("[/]",Node)
+  Ppn<-substring(Node,(x+1))
+  Node<-substring(Node,1,(x-1))
+  data<-cbind(date,Node)
+  data<-cbind(date,Ppn)
+  data$m<-NULL
+  return(data)
+}
+
+GetDateMessageUserJobNcupsPpnAndMemByRange<-function(data,initialDate,finalDate){
+  data<-GetDateMessageUserJobNcupsAndPpnByRange(data,initialDate,finalDate)
+  memExpr<-"resources[_]used.mem=[0-9]+[a-zA-Z]+"
+  m<-regexpr(memExpr,data$message,perl=TRUE)
+  data<-cbind(data,m)
+  date <- subset(data, data$m != (-1),select = c(date,message,user,jobname,Ncpu,Node,Ppn))
+  MemUsedkb <- regmatches(data$message,data$m)
+  MemUsedkb <- substring(MemUsedkb, nchar("resources_used.mem=")+1)
+  x<-regexpr("[a-zA-Z]+",MemUsedkb)
+  MemUsedkb<-substring(MemUsedkb,1,(x-1))
+  data<-cbind(date,MemUsedkb)
+  data$m<-NULL
+  return(data)
+}
+
 GetUserFromMessage <- function(message) {
   # Extracts the username from a message 
   # 
