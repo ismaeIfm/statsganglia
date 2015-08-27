@@ -139,15 +139,12 @@ GetDateMessageUserJobNcupsPpnAndMemByRange<-function(data,initialDate,finalDate)
   data<-GetDateMessageUserJobNcupsAndPpnByRange(data,initialDate,finalDate)
   memExpr<-"resources[_]used.mem=[0-9]+[a-zA-Z]+"
   m<-regexpr(memExpr,data$message,perl=TRUE)
-  m
   data<-cbind(data,m)
   date <- subset(data, data$m != (-1),select = c(date,message,user,jobname,Ncpu,Node,Ppn))
   MemUsedkb <- regmatches(data$message,data$m)
-  MemUsedkb
   MemUsedkb <- substring(MemUsedkb, nchar("resources_used.mem=")+1)
   x<-regexpr("[a-zA-Z]+",MemUsedkb)
   MemUsedkb<-substring(MemUsedkb,1,(x-1))
-  MemUsedkb
   data<-cbind(date,MemUsedkb)
   data$m<-NULL
   return(data)
