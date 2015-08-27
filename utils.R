@@ -80,7 +80,7 @@ GetDateAndMessageByRange<-function(data,initialDate,finalDate){
 GetDateMessageAndUserByRange<-function(data,initialDate,finalDate){
   
   data<-GetDateAndMessageByRange(data,initialDate,finalDate)
-  userExpr <- "user=[a-z]+"
+  userExpr <- "user=[a-zA-Z.0-9]+"
   m <- regexpr(userExpr,data$message, perl = TRUE)
   data <- cbind(data,m)
   date<-subset(data, data$m == 1,select = c(date,message,m))
@@ -155,7 +155,7 @@ PlotDataSummary <- function(data) {
   # generated using ggplot2.
   # 
   # Args:
-  #   data: Data from accounting logs of torque.
+  #   data: Data from accounting logs of torque.  
   #
   # Returns:
   #   The plot.
@@ -175,16 +175,20 @@ PlotHistRequestors <- function(data) {
   qplot(V4, data=requestors, geom = "histogram")
 }
 
-PlotHistUsers <- function(data) {
+
+GetUsers <- function(data){
+  users <- data.frame(lapply(data[4], GetUserFromMessage))
+}
+
+PlotHistUsers <- function(users) {
   # Plots a histogram of the users appearing in the data. The plot is 
   # generated using ggplot2.
   # 
   # Args:
-  #   data: Data from accounting logs of torque.
+  #   users: Users from accounting logs of torque.
   #
   # Returns:
   #   The plot.
-  users <- data.frame(lapply(data[4], GetUserFromMessage))
   qplot(V4, data=users, geom="histogram")
 }
 
@@ -233,15 +237,11 @@ GetDataByType <- function(data, type) {
   # 
   # Args:
   #   data: Data from accounting logs of torque.
-  #   type: Record marker type. 
+  #   type: List that contains record marker type. 
   #
   # Returns:
   #   A table that contains all the data of a single type.s
-  dataByType <- switch(type, "A" = data[data$V2 == "A", ],
-                       "C" = data[data$V2 == "C", ], "D" = data[data$V2 == "D", ],
-                       "E" = data[data$V2 == "E", ], "Q" = data[data$V2 == "Q", ], 
-                       "R" = data[data$V2 == "R", ], "S" = data[data$V2 == "S", ],
-                       "T" = data[data$V2 == "T", ])
+  dataByType <- data[data$V2 == type, ]
   return(dataByType)
 }
 

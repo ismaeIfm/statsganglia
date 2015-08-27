@@ -10,21 +10,38 @@ library(ggplot2)
 source("utils.R")
 
 #Reads the files in the directory
-accounting <- ReadDirectory("/home/ismael/Desktop/accounting/")
-selectedMessageTypes <- c("Abort", "Checkpoint", "Delete", "Exit", "Queue", "Rerun", "Start", "Restart")
+#accounting <- ReadDirectory("/home/ismael/Desktop/accounting/")
 
-shinyServer(function(input, output) {
+
+
+shinyServer(function(input, output,session) {
   
-  output$text1 <- renderPlot({ 
-    sessionData <- GetDataByDate(accounting, as.POSIXct(input$dates[1]), `>=`)
+  output$summary <- renderPlot({ 
+    sessionData <- GetDataByType(accounting, input$checkGroup)
+    sessionData <- GetDataByDate(sessionData, as.POSIXct(input$dates[1]), `>=`)
     sessionData <- GetDataByDate(sessionData, as.POSIXct(input$dates[2]), `<=`)
     PlotDataSummary(sessionData)#Plots the data by message type
    
   })
 
   
- 
+  
+  output$users <- renderPlot({ 
+    sessionData <- GetDataByType(accounting, input$checkGroup)
+    sessionData <- GetDataByDate(sessionData, as.POSIXct(input$dates[1]), `>=`)
+    sessionData <- GetDataByDate(sessionData, as.POSIXct(input$dates[2]), `<=`)
+    users <- GetUsers(sessionData)
+    updateSelectInput(session, "select", choices = as.character(unique(prueba)$V4))
+    PlotHistUsers(users)
+  })
 
+  output$jobs <- renderPlot({ 
+    sessionData <- GetDataByType(accounting, input$checkGroup)
+    sessionData <- GetDataByDate(sessionData, as.POSIXct(input$dates[1]), `>=`)
+    sessionData <- GetDataByDate(sessionData, as.POSIXct(input$dates[2]), `<=`)
+    PlotHistJobs(sessionData)
+  })
+  
 })
 
 #Creates a date

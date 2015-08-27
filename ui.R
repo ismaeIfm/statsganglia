@@ -21,18 +21,16 @@ shinyUI(fluidPage(
   sidebarLayout(
     sidebarPanel(  checkboxGroupInput("checkGroup", 
                                       label = h3("Record Type"), 
-                                      choices = list("Abort" = 1, 
-                                                     "Checkpoint" = 2, 
-                                                     "Delete" = 3, 
-                                                     "Exit" = 4, 
-                                                     "Queue" = 5, 
-                                                     "Rerun" = 6, 
-                                                     "Start" = 7, 
-                                                     "Restart" = 8 ), selected = c(1,2,3,4,5,6,7,8)),  
-                   selectInput("select", label = h3("Usuario"), 
-                                                                  choices = list("Todos" = 1, "Usuario 1" = 2, "Usuario 2" = 3,
-                                                                                 "Usuario 3" = 4), selected = 1)),
-    mainPanel(  plotOutput("text1"))
+                                      choices = list("Abort" = "A", 
+                                                     "Checkpoint" = "C", 
+                                                     "Delete" = "D", 
+                                                     "Exit" = "E", 
+                                                     "Queue" = "Q", 
+                                                     "Rerun" = "R", 
+                                                     "Start" = "S", 
+                                                     "Restart" = "T" ), selected = c("A","C","D","E","Q","R","S","T"))
+                   ),
+    mainPanel(plotOutput("users"), selectInput("select", label = h3("Usuario"), choices=c("todos" = 1)), plotOutput("summary"))#, plotOutput("jobs"))# 
   )
 
   
