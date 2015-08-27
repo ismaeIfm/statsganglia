@@ -135,7 +135,7 @@ GetDateMessageUserJobNcupsAndPpnByRange<-function(data,initialDate,finalDate){
   return(data)
 }
 
-GetDateMessageUserJobNcupsPpnAndMenByRange<-function(data,initialDate,finalDate){
+GetDateMessageUserJobNcupsPpnAndMemByRange<-function(data,initialDate,finalDate){
   data<-GetDateMessageUserJobNcupsAndPpnByRange(data,initialDate,finalDate)
   memExpr<-"resources[_]used.mem=[0-9]+[a-zA-Z]+"
   m<-regexpr(memExpr,data$message,perl=TRUE)
