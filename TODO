@@ -8,6 +8,11 @@ Features to add in shiny app:
 - Select between graphs by user by status
 - Examine specific users 
 
+- Create new tab that will include:
+  - Graphic of total time of jobs per user in the whole of time accounted
+  - Be able to specify periods of time and then graph this per user
+  
+  
 Features to add in knitr report
 
 - Learn knitr
