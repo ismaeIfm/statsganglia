@@ -15,7 +15,7 @@ shinyUI(fluidPage(
            dateRangeInput("dates", label = h3("Rango de Fechas"), start= "2014-02-10", min = "2014-02-10")),
     
     column(3, 
-           textInput("text", label = h3("Búsqueda"), 
+           textInput("text", label = h3("Busqueda"), 
                      value = "Enter text..."))
   ),  
   sidebarLayout(
