@@ -1,12 +1,11 @@
 URGENT CHANGES: 
 
--
-
-Features to add in shiny app: 
-
 - Be able to select range of dates and validate dates
 - Select between graphs by user by status
 - Examine specific users 
+
+
+NOT SO URGENT CHANGES: 
 
 - Create new tab that will include:
   - Graphic of total time of jobs per user in the whole of time accounted
