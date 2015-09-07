@@ -35,7 +35,6 @@ GetDataByDate <- function(data, date, fun) {
   #   A data frame that contains all the data that satisfies comparing it with the date using fun.
   return(data[fun(as.POSIXct(data$V1, format = "%m/%d/%Y %H:%M:%S"), date), ])
 }
-
 GetDateByRange<-function(data,initialDate,finalDate){
   # Filters data by range.
   #
@@ -71,9 +70,9 @@ GetDateAndMessageByRange<-function(data,initialDate,finalDate){
   data<-as.data.frame(subset(data,
                              data$V1 > as.POSIXct(initialDate, format = "%m/%d/%Y %H:%M:%S")&
                                data$V1 < as.POSIXct(finalDate, format = "%m/%d/%Y %H:%M:%S"), 
-                             select = c(V1,V4))
+                             select = c(V1,V2,V3,V4))
   )
-  colnames(data)<-c("date","message")
+  colnames(data)<-c("date","status","Nmingus","message")
   return(data)
 }
 
@@ -83,11 +82,11 @@ GetDateMessageAndUserByRange<-function(data,initialDate,finalDate){
   userExpr <- "user=[a-zA-Z.0-9]+"
   m <- regexpr(userExpr,data$message, perl = TRUE)
   data <- cbind(data,m)
-  date<-subset(data, data$m == 1,select = c(date,message,m))
+  date<-subset(data, data$m != (-1),select = c("date","status","Nmingus","message","m"))
   user <- regmatches(data$message, data$m)
   user <- substring(user, nchar("user=") + 1)
   data <- cbind(date,user)
-  data <- data[,-3]
+  data$m<-NULL
   return(data)
 }
 
@@ -97,7 +96,7 @@ GetDateMessageUserAndJobByRange<-function(data,initialDate,finalDate){
   jobnameExpr <- "jobname=[a-zA-Z.0-9]+"
   m <- regexpr(jobnameExpr, data$message, perl = TRUE)
   data <- cbind(data,m)
-  date <- subset(data, data$m != (-1),select = c(date,message,user,m))
+  date <- subset(data, data$m != (-1),select = c("date","status","Nmingus","message","user","m"))
   jobname <- regmatches(data$message, data$m)
   jobname <- substring(jobname, nchar("jobname=") + 1)
   data <- cbind(date,jobname)
@@ -110,7 +109,7 @@ GetDateMessageUserJobAndNcupsByRange<-function(data,initialDate,finalDate){
   ncpuExpr <- "source[_]List[.]ncpus=[0-9]{1,3}"
   m <- regexpr(ncpuExpr,data$message, perl = TRUE)
   data <- cbind(data,m)
-  date <- subset(data, data$m != (-1),select = c(date,message,user,jobname,m))
+  date <- subset(data, data$m != (-1),select = c(date,status,Nmingus,message,user,jobname,m))
   Ncpu <- regmatches(data$message, data$m)
   Ncpu <- substring(Ncpu, nchar("source_List.ncpus=") + 1)
   data <- cbind(date,Ncpu)
@@ -123,7 +122,7 @@ GetDateMessageUserJobNcupsAndPpnByRange<-function(data,initialDate,finalDate){
   exehostExpr="exec[_]host=node[0-9]{1,3}[/][0-9]{1,3}"
   m <- regexpr(exehostExpr,data$message, perl = TRUE) 
   data<-cbind(data,m)
-  date <- subset(data, data$m != (-1),select = c(date,message,user,jobname,Ncpu,m))
+  date <- subset(data, data$m != (-1),select = c(date,status,Nmingus,message,user,jobname,Ncpu,m))
   Node <- regmatches(data$message,data$m)
   Node <- substring(Node, nchar("exec_host=node")+1)
   x<-regexpr("[/]",Node)
@@ -140,15 +139,36 @@ GetDateMessageUserJobNcupsPpnAndMemByRange<-function(data,initialDate,finalDate)
   memExpr<-"resources[_]used.mem=[0-9]+[a-zA-Z]+"
   m<-regexpr(memExpr,data$message,perl=TRUE)
   data<-cbind(data,m)
-  date <- subset(data, data$m != (-1),select = c(date,message,user,jobname,Ncpu,Node,Ppn))
+  date <- subset(data, data$m != (-1),select = c(date,status,Nmingus,message,user,jobname,Ncpu,Ppn))
   MemUsedkb <- regmatches(data$message,data$m)
   MemUsedkb <- substring(MemUsedkb, nchar("resources_used.mem=")+1)
   x<-regexpr("[a-zA-Z]+",MemUsedkb)
   MemUsedkb<-substring(MemUsedkb,1,(x-1))
   data<-cbind(date,MemUsedkb)
   data$m<-NULL
+  data$message<-NULL
   return(data)
 }
+
+dateNcpuStatusPlot<-function(dataset,number,letter)
+{
+  dataset<-subset(dataset, Ncpu == number & status == letter)
+  return(qplot(date,Ncpu,data = dataset,color = status))
+}
+
+dateUserJobnameNcpuPlot<-function(dataset,nuser,jname,ncup,lstatus)
+{
+  dataset<-subset(dataset,user == nuser & jobname == jname & Ncpu == ncpu & status = lstatus)
+  return(qplot(date,paste(data$user,data$jobname),data = dataset,color = Ncpu,ylab ="user and jobname"))
+}
+
+
+userJobnameCountStatusPlot<-function(dataset,nuser,jnamen,lstatus)
+{
+  dataset<-subset(dataset,user == nuser & jobname == jname & Ncpu == ncpu & status = lstatus)
+  return(qplot(paste(data$user,data$jobname), data = dataset, geom = "bar",xlab="user and jobname",color=status))
+}
+
 
 GetUserFromMessage <- function(message) {
   # Extracts the username from a message 
