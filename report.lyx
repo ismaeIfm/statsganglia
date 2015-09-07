@@ -1,0 +1,231 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+Ganglia ofrece datos de medidas de rendimiento y un monitoreo rutinario
+ en tiempo real para redes de computadoras.
+ Ganglia corre en todos los sitemas opertivos populares, es facilmente escalable
+ para redes muy grandes debido a su diseño y resistente a errores.
+ Ganglia fue diseñado para supervisar y recolectar cantidades masivas de
+ medidas de un sistema en tiempo real.
+\end_layout
+
+\begin_layout Standard
+Ganglia sirve cuando:
+\end_layout
+
+\begin_layout Itemize
+Se tiene un número de computadoras con un sistema operativo de uso general
+ y se requiere información de su desempeño en tiempo real.
+ Asi mismo Ganglia puede monitorear componentes de una red como routers
+ y switches.
+\end_layout
+
+\begin_layout Itemize
+Los hosts puedan ser organizados en grupos.
+\end_layout
+
+\begin_layout Itemize
+El sistema operativo y red no sean hostiles ante el protcolo UDP.
+\end_layout
+
+\begin_layout Standard
+Ganglia esta compuesto de 3 demonios: gmond, gmetad y gweb.
+ Operacionalmente cada demonio es autonomo, necesitando solo su propio archivo
+ de configuración para operar.
+ Cada uno de ellos comenzara y correra aun con la aucensia de alguno de
+ los otros dos, aunque los tres demonios con copperativos.
+ Además se requieren los tres para tener una instalación útil.
+\end_layout
+
+\begin_layout Standard
+Toda la información es intercambiada en XML y XDR, esto asegura maxima extensibi
+lidad y portabilidad.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename ../Pictures/ganglia.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+gmond (Ganglia Monitoring Daemon):
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Es un demonio multithread el cual corre en cada nodo perteneciente al cluster
+ que se desea monitorear.
+ Gmond es responsable de la interacción con el sistema operativo anfitrion
+ para adquirir medidas sobre metricas tales como la carga del CPU y la capacidad
+ de disco.
+ Gmond tiene un diseño modular, contando con plug-ins especificos del sistema
+ operativo escritos en C para tomar mediciones.
+ Gmond viene incluido con la mayoria de las metricas que puedan interesar.
+ Es importante hacer notar que se pueden añadir plugins para extender las
+ metricas que se monitorean.
+ Gmond no espera que a que algo externo le diga cuanto tomar medidas, ni
+ pasa los resultados directamente a encuestador centralizado, en lugar de
+ eso gmond encuesta de cauerdo con su propio calendario, como se encuentra
+ definido en su archivo local de configuraci´on.
+ Las medidas son compartidas con los pares (peers) usando un simple protcolo
+ via XDR (External Data Representation), estos anuncios son hechos via multicast
+ (el cluster esta compuesto por hosts que comparten la misma dirección multicast
+).
+ Gmond solo hace multicast de una metrica que esta monitoriando por dos
+ razones:
+\end_layout
+
+\begin_layout Itemize
+Un cambio en el valor de la metrica excede el valor del umbral.
+ El umbral nos asegura que gmond solo haga multicast cuando es realmente
+ necesario.
+\end_layout
+
+\begin_layout Itemize
+No ha hecho un multicast de la metrica en cierto tiempo.
+\end_layout
+
+\begin_layout Standard
+Estas restricciones reducen la saturación del canal multicast.
+ Cada gmond host debe guardar las metricas que recibe de sus pares (peers).
+ Con esto se puede pedir un XML con el estado copleto del cluster.
+ Aunque gmond solo compartira información de los hosts especificados en
+ el parametro trusted_hosts en el archivo de configuración (gmond.conf).
+ El puerto 8649 es el puerto por defecto para para escuchar por peticiones
+ XML (sobre TCP).
+ Se puede ver una descripción usando telenet:
+\end_layout
+
+\begin_layout Standard
+$telnet localhost 8649.
+\end_layout
+
+\begin_layout Standard
+Gmond se auto-organiza y asegura que todos los gmonds esten en sicronia,
+ con esto se solo se tiene que consultar un nodo por cluster para conocer
+ el estado completo del cluster.
+\end_layout
+
+\begin_layout Standard
+Las configuraciones por defecto trabajaran en la mayoria de los clusters.
+ Ademas gmond es muy fexible y altamente personalizable.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+gmetad (Ganglia Meta Daemon):
+\end_layout
+
+\begin_layout Standard
+La siguiente imagen muestra como funciona gmetad con gmond.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename ../Pictures/pasted1.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Gmetad extrae la descripcion XML de fuentes de datos de ganglia (gmonds
+ o incluso gmetads) via rutas unicast.
+ El comportameinto de gmetad es controlado por un archivo de configuración
+ (gmetad.conf).
+ Gmetad es el back-end de del front-end de ganglia.
+ Gmetad almacena la información en bases de datos Round-Robin, esta información
+ es usada por el front-end (resumenes exportados en XML).
+\end_layout
+
+\begin_layout Itemize
+gweb (Ganglia Web Frontend):
+\end_layout
+
+\begin_layout Standard
+El frontend es escrito en PHP.
+ Las paginas web son muy dinamicas cualquier cambio en la infromación de
+ Ganglia aparece inmediatamente en el sitio (Sitio muy responsivo).
+ El front-end depende de la existencia de Gmetad el cual le provee de la
+ información de varias fuentes Ganglia.
+ El front-end espera recibir un arbol XML de Ganglia por el puerto 8651.
+ 
+\end_layout
+
+\begin_layout Standard
+La mayoria de los paarmaetros de configuracion se encuentran en gmetad-webfronte
+nd/conf.php.
+ Las partes estaticas de sitio pueden ser modificadas, es decir hay elemntos
+ como etiquetas, links, imagenes, etc pueden ser modificadas.
+ Existe una variable $template_name donde se nombra un directorio dond ese
+ encuentra el actual tema (Ganglia usa TemplatePower para implementar temas).
+ Ademas se pueden modificar valores como los rangos de fechas o que metricas
+ desplegar.
+\end_layout
+
+\end_body
+\end_document
