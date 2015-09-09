@@ -158,14 +158,14 @@ dateNcpuStatusPlot<-function(dataset,number,letter)
 
 dateUserJobnameNcpuPlot<-function(dataset,nuser,jname,ncup,lstatus)
 {
-  dataset<-subset(dataset,user == nuser & jobname == jname & Ncpu == ncpu & status = lstatus)
+  dataset<-subset(dataset,user == nuser & jobname == jname & Ncpu == ncpu & status == lstatus)
   return(qplot(date,paste(data$user,data$jobname),data = dataset,color = Ncpu,ylab ="user and jobname"))
 }
 
 
 userJobnameCountStatusPlot<-function(dataset,nuser,jnamen,lstatus)
 {
-  dataset<-subset(dataset,user == nuser & jobname == jname & Ncpu == ncpu & status = lstatus)
+  dataset<-subset(dataset,user == nuser & jobname == jname & Ncpu == ncpu & status == lstatus)
   return(qplot(paste(data$user,data$jobname), data = dataset, geom = "bar",xlab="user and jobname",color=status))
 }
 
