@@ -36,7 +36,7 @@ shinyServer(function(input, output,session) {
     sessionData <- GetDataByDate(sessionData, as.POSIXct(input$dates[1]), `>=`)
     sessionData <- GetDataByDate(sessionData, as.POSIXct(input$dates[2]), `<=`)
     users <- GetUsers(sessionData)
-    updateSelectInput(session, "select", choices = as.character(unique(users)$V4))
+    updateSelectInput(session, "select", choices = as.character(unique(users)$mensaje))
     PlotHistUsers(users)
   })
 
@@ -48,8 +48,9 @@ shinyServer(function(input, output,session) {
   })
   
   output$seriedetiempo <- renderPlot({
-   
-    Data
+    data<-GetDateMessageUserJobNcupsPpnAndMemByRange(accounting,input$dates[1],input$dates[2])
+    updateSelectInput(session, "select_jobs", choices = as.character( unique( subset(data, user == input$select_users[1], jobname) ) ))
+    dateUserJobnameNcpuPlot(data,input$select_users,input$select_jobs,input$select_cpu,)
     
   })
   
