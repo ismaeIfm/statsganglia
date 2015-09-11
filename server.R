@@ -24,7 +24,12 @@ shinyServer(function(input, output,session) {
    
   })
 
-  
+  output$jobsnames <- renderTable({
+    sessionData <- GetDataByType(accounting, input$checkGroup)
+    sessionData <- GetDataByDate(sessionData, as.POSIXct(input$dates[1]), `>=`)
+    sessionData <- GetDataByDate(sessionData, as.POSIXct(input$dates[2]), `<=`)
+    GetJobsnames(sessionData)
+  })
   
   output$users <- renderPlot({ 
     sessionData <- GetDataByType(accounting, input$checkGroup)
@@ -40,6 +45,10 @@ shinyServer(function(input, output,session) {
     sessionData <- GetDataByDate(sessionData, as.POSIXct(input$dates[1]), `>=`)
     sessionData <- GetDataByDate(sessionData, as.POSIXct(input$dates[2]), `<=`)
     PlotHistJobs(sessionData)
+  })
+  
+  output$seriedetiempo <- renderPlot({
+   
   })
   
 })

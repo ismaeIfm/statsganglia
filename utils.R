@@ -19,6 +19,8 @@ ReadDirectory <- function(name.directory) {
     dataFile <- read.table(nameFile, sep = ";", flush = TRUE)
     dataDirectory <- rbind(dataDirectory, dataFile, deparse.level = 1)
   }
+  
+  colnames(dataDirectory) <- c("Fecha", "Record" ,"Nmingus", "mensaje")
   return(dataDirectory)
 }
 
@@ -33,7 +35,7 @@ GetDataByDate <- function(data, date, fun) {
   #
   # Returns:
   #   A data frame that contains all the data that satisfies comparing it with the date using fun.
-  return(data[fun(as.POSIXct(data$V1, format = "%m/%d/%Y %H:%M:%S"), date), ])
+  return(data[fun(as.POSIXct(data$Fecha, format = "%m/%d/%Y %H:%M:%S"), date), ])
 }
 GetDateByRange<-function(data,initialDate,finalDate){
   # Filters data by range.
@@ -45,10 +47,10 @@ GetDateByRange<-function(data,initialDate,finalDate){
   #
   # Returns:
   #   A data frame that contains all the data contained in the range
-  data<-as.data.frame(subset(as.POSIXct(data$V1, format = "%m/%d/%Y %H:%M:%S"), 
-                             as.POSIXct(data$V1, format = "%m/%d/%Y %H:%M:%S") > 
+  data<-as.data.frame(subset(as.POSIXct(data$Fecha, format = "%m/%d/%Y %H:%M:%S"), 
+                             as.POSIXct(data$Fecha, format = "%m/%d/%Y %H:%M:%S") > 
                                as.POSIXct(initialDate, format = "%m/%d/%Y %H:%M:%S")&
-                               as.POSIXct(data$V1, format = "%m/%d/%Y %H:%M:%S") < 
+                               as.POSIXct(data$Fecha, format = "%m/%d/%Y %H:%M:%S") < 
                                as.POSIXct(finalDate, format = "%m/%d/%Y %H:%M:%S")
   )       
   )
@@ -66,11 +68,11 @@ GetDateAndMessageByRange<-function(data,initialDate,finalDate){
   #
   # Returns:
   #   A data frame that contains all the data and messages contained in the range
-  data$V1<-as.POSIXct(data$V1, format = "%m/%d/%Y %H:%M:%S")
+  data$Fecha<-as.POSIXct(data$Fecha, format = "%m/%d/%Y %H:%M:%S")
   data<-as.data.frame(subset(data,
-                             data$V1 > as.POSIXct(initialDate, format = "%m/%d/%Y %H:%M:%S")&
-                               data$V1 < as.POSIXct(finalDate, format = "%m/%d/%Y %H:%M:%S"), 
-                             select = c(V1,V2,V3,V4))
+                             data$Fecha > as.POSIXct(initialDate, format = "%m/%d/%Y %H:%M:%S")&
+                               data$Fecha < as.POSIXct(finalDate, format = "%m/%d/%Y %H:%M:%S"), 
+                             select = c(Fecha,Record,Nmingus,mensaje))
   )
   colnames(data)<-c("date","status","Nmingus","message")
   return(data)
@@ -93,7 +95,7 @@ GetDateMessageAndUserByRange<-function(data,initialDate,finalDate){
 GetDateMessageUserAndJobByRange<-function(data,initialDate,finalDate){
   
   data<-GetDateMessageAndUserByRange(data,initialDate,finalDate)
-  jobnameExpr <- "jobname=[a-zA-Z.0-9]+"
+  jobnameExpr <- "jobname=[a-zA-Z.0-9\\-\\/]+"
   m <- regexpr(jobnameExpr, data$message, perl = TRUE)
   data <- cbind(data,m)
   date <- subset(data, data$m != (-1),select = c("date","status","Nmingus","message","user","m"))
@@ -209,7 +211,7 @@ GetJobnameFromMessage <- function(message) {
   #
   # Returns:
   #   The string of he jobname if it is present
-  jobnameExpr <- "jobname=[a-zA-Z.0-9]+"#Falta añadir la diagonal
+  jobnameExpr <- "jobname=[a-zA-Z.0-9\\-\\/]+"#Falta añadir la diagonal
   m <- regexpr(jobnameExpr, message, perl = TRUE)
   match <- regmatches(message, m)
   return(substring(match, nchar("jobname=") + 1))
@@ -224,7 +226,7 @@ PlotDataSummary <- function(data) {
   #
   # Returns:
   #   The plot.
-  qplot(V2, data=data, geom = "histogram")
+  qplot(Record, data=data, geom = "histogram")
 }
 
 PlotHistRequestors <- function(data) {
@@ -237,7 +239,7 @@ PlotHistRequestors <- function(data) {
   # Returns:
   #   The plot.
   requestors <- data.frame(lapply(data[4], GetRequestorFromMessage))
-  qplot(V4, data=requestors, geom = "histogram")
+  qplot(mensaje, data=requestors, geom = "histogram")
 }
 
 
@@ -254,7 +256,7 @@ PlotHistUsers <- function(users) {
   #
   # Returns:
   #   The plot.
-  qplot(V4, data=users, geom="histogram")
+  qplot(mensaje, data=users, geom="histogram")
 }
 
 
@@ -268,7 +270,7 @@ PlotHistJobs <- function(data) {
   # Returns:
   #   The plot.
   jobsnames <- data.frame(lapply(data[4], GetJobnameFromMessage))
-  qplot(V4, data=jobsnames, geom = "histogram")
+  qplot(mensaje, data=jobsnames, geom = "histogram")
 }
 
 GetUserJobs <- function (user.name, data) {
@@ -281,7 +283,7 @@ GetUserJobs <- function (user.name, data) {
   # Returns:
   #   A table that contains all the jobs belonging to the user.
   userString <- paste("user=", user.name, sep = "")
-  userJobs <- data[grep(userString, data$V4), ]
+  userJobs <- data[grep(userString, data$mensaje), ]
   userJobsname <- table(lapply(userJobs[4], GetJobnameFromMessage))
   return(userJobsname)
 }
@@ -306,7 +308,7 @@ GetDataByType <- function(data, type) {
   #
   # Returns:
   #   A table that contains all the data of a single type.s
-  dataByType <- data[data$V2 == type, ]
+  dataByType <- data[data$Record == type, ]
   return(dataByType)
 }
 
