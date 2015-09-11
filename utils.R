@@ -152,23 +152,23 @@ GetDateMessageUserJobNcupsPpnAndMemByRange<-function(data,initialDate,finalDate)
   return(data)
 }
 
-dateNcpuStatusPlot<-function(dataset,number,letter)
+dateNcpuStatusPlot<-function(dataset,number,letter,initialDate,finalDate)
 {
-  dataset<-subset(dataset, Ncpu == number & status == letter)
+  dataset<-subset(dataset, Ncpu == number & status == letter & Fecha > as.POSIXct(initialDate, format = "%m/%d/%Y %H:%M:%S") & Fecha < as.POSIXct(finalDate, format = "%m/%d/%Y %H:%M:%S"))
   return(qplot(date,Ncpu,data = dataset,color = status))
 }
 
-dateUserJobnameNcpuPlot<-function(dataset,nuser,jname,ncup,lstatus)
+dateUserJobnameNcpuPlot<-function(dataset,nuser,jname,ncup,lstatus,initialDate,finalDate)
 {
-  dataset<-subset(dataset,user == nuser & jobname == jname & Ncpu == ncpu & status == lstatus)
-  return(qplot(date,paste(data$user,data$jobname),data = dataset,color = Ncpu,ylab ="user and jobname"))
+  dataset<-subset(dataset,user == nuser & jobname == jname & Ncpu == ncpu & status == lstatus & Fecha > as.POSIXct(initialDate, format = "%m/%d/%Y %H:%M:%S")& Fecha < as.POSIXct(finalDate, format = "%m/%d/%Y %H:%M:%S"))
+  return(qplot(date,paste(dataset$user,dataset$jobname),data = dataset,color = Ncpu,ylab ="user and jobname"))
 }
 
 
-userJobnameCountStatusPlot<-function(dataset,nuser,jnamen,lstatus)
+userJobnameCountStatusPlot<-function(dataset,nuser,jnamen,lstatus,initialDate,finalDate)
 {
-  dataset<-subset(dataset,user == nuser & jobname == jname & Ncpu == ncpu & status == lstatus)
-  return(qplot(paste(data$user,data$jobname), data = dataset, geom = "bar",xlab="user and jobname",color=status))
+  dataset<-subset(dataset,user == nuser & jobname == jname & Ncpu == ncpu & status == lstatus & Fecha > as.POSIXct(initialDate, format = "%m/%d/%Y %H:%M:%S") & Fecha < as.POSIXct(finalDate, format = "%m/%d/%Y %H:%M:%S"))
+  return(qplot(paste(dataset$user,dataset$jobname), data = dataset, geom = "bar",xlab="user and jobname",color=status))
 }
 
 
