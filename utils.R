@@ -74,7 +74,7 @@ GetDateAndMessageByRange<-function(data,initialDate,finalDate){
                                data$Fecha < as.POSIXct(finalDate, format = "%m/%d/%Y %H:%M:%S"), 
                              select = c(Fecha,Record,Nmingus,mensaje))
   )
-  colnames(data)<-c("date","status","Nmingus","message")
+  colnames(data)<-c("date","Record","Nmingus","message")
   return(data)
 }
 
@@ -84,7 +84,7 @@ GetDateMessageAndUserByRange<-function(data,initialDate,finalDate){
   userExpr <- "user=[a-zA-Z.0-9]+"
   m <- regexpr(userExpr,data$message, perl = TRUE)
   data <- cbind(data,m)
-  date<-subset(data, data$m != (-1),select = c("date","status","Nmingus","message","m"))
+  date<-subset(data, data$m != (-1),select = c("date","Record","Nmingus","message","m"))
   user <- regmatches(data$message, data$m)
   user <- substring(user, nchar("user=") + 1)
   data <- cbind(date,user)
@@ -98,7 +98,7 @@ GetDateMessageUserAndJobByRange<-function(data,initialDate,finalDate){
   jobnameExpr <- "jobname=[a-zA-Z.0-9\\-\\/]+"
   m <- regexpr(jobnameExpr, data$message, perl = TRUE)
   data <- cbind(data,m)
-  date <- subset(data, data$m != (-1),select = c("date","status","Nmingus","message","user","m"))
+  date <- subset(data, data$m != (-1),select = c("date","Record","Nmingus","message","user","m"))
   jobname <- regmatches(data$message, data$m)
   jobname <- substring(jobname, nchar("jobname=") + 1)
   data <- cbind(date,jobname)
@@ -111,7 +111,7 @@ GetDateMessageUserJobAndNcupsByRange<-function(data,initialDate,finalDate){
   ncpuExpr <- "source[_]List[.]ncpus=[0-9]{1,3}"
   m <- regexpr(ncpuExpr,data$message, perl = TRUE)
   data <- cbind(data,m)
-  date <- subset(data, data$m != (-1),select = c(date,status,Nmingus,message,user,jobname,m))
+  date <- subset(data, data$m != (-1),select = c(date,Record,Nmingus,message,user,jobname,m))
   Ncpu <- regmatches(data$message, data$m)
   Ncpu <- substring(Ncpu, nchar("source_List.ncpus=") + 1)
   data <- cbind(date,Ncpu)
@@ -124,7 +124,7 @@ GetDateMessageUserJobNcupsAndPpnByRange<-function(data,initialDate,finalDate){
   exehostExpr="exec[_]host=node[0-9]{1,3}[/][0-9]{1,3}"
   m <- regexpr(exehostExpr,data$message, perl = TRUE) 
   data<-cbind(data,m)
-  date <- subset(data, data$m != (-1),select = c(date,status,Nmingus,message,user,jobname,Ncpu,m))
+  date <- subset(data, data$m != (-1),select = c(date,Record,Nmingus,message,user,jobname,Ncpu,m))
   Node <- regmatches(data$message,data$m)
   Node <- substring(Node, nchar("exec_host=node")+1)
   x<-regexpr("[/]",Node)
@@ -141,7 +141,7 @@ GetDateMessageUserJobNcupsPpnAndMemByRange<-function(data,initialDate,finalDate)
   memExpr<-"resources[_]used.mem=[0-9]+[a-zA-Z]+"
   m<-regexpr(memExpr,data$message,perl=TRUE)
   data<-cbind(data,m)
-  date <- subset(data, data$m != (-1),select = c(date,status,Nmingus,message,user,jobname,Ncpu,Ppn))
+  date <- subset(data, data$m != (-1),select = c(date,Record,Nmingus,message,user,jobname,Ncpu,Ppn))
   MemUsedkb <- regmatches(data$message,data$m)
   MemUsedkb <- substring(MemUsedkb, nchar("resources_used.mem=")+1)
   x<-regexpr("[a-zA-Z]+",MemUsedkb)
@@ -152,23 +152,23 @@ GetDateMessageUserJobNcupsPpnAndMemByRange<-function(data,initialDate,finalDate)
   return(data)
 }
 
-dateNcpuStatusPlot<-function(dataset,number,letter,initialDate,finalDate)
+dateNcpuRecordPlot<-function(dataset,number,letter,initialDate,finalDate)
 {
-  dataset<-subset(dataset, Ncpu == number & status == letter & Fecha > as.POSIXct(initialDate, format = "%m/%d/%Y %H:%M:%S") & Fecha < as.POSIXct(finalDate, format = "%m/%d/%Y %H:%M:%S"))
-  return(qplot(date,Ncpu,data = dataset,color = status))
+  dataset<-subset(dataset, Ncpu == number & Record == letter & Fecha > as.POSIXct(initialDate, format = "%m/%d/%Y %H:%M:%S") & Fecha < as.POSIXct(finalDate, format = "%m/%d/%Y %H:%M:%S"))
+  return(qplot(date,Ncpu,data = dataset,color = Record))
 }
 
-dateUserJobnameNcpuPlot<-function(dataset,nuser,jname,ncup,lstatus,initialDate,finalDate)
+dateUserJobnameNcpuPlot<-function(dataset,nuser,jname,ncup,lRecord,initialDate,finalDate)
 {
-  dataset<-subset(dataset,user == nuser & jobname == jname & Ncpu == ncpu & status == lstatus & Fecha > as.POSIXct(initialDate, format = "%m/%d/%Y %H:%M:%S")& Fecha < as.POSIXct(finalDate, format = "%m/%d/%Y %H:%M:%S"))
+  dataset<-subset(dataset,user == nuser & jobname == jname & Ncpu == ncpu & Record == lRecord & Fecha > as.POSIXct(initialDate, format = "%m/%d/%Y %H:%M:%S")& Fecha < as.POSIXct(finalDate, format = "%m/%d/%Y %H:%M:%S"))
   return(qplot(date,paste(dataset$user,dataset$jobname),data = dataset,color = Ncpu,ylab ="user and jobname"))
 }
 
 
-userJobnameCountStatusPlot<-function(dataset,nuser,jnamen,lstatus,initialDate,finalDate)
+userJobnameCountRecordPlot<-function(dataset,nuser,jnamen,lRecord,initialDate,finalDate)
 {
-  dataset<-subset(dataset,user == nuser & jobname == jname & Ncpu == ncpu & status == lstatus & Fecha > as.POSIXct(initialDate, format = "%m/%d/%Y %H:%M:%S") & Fecha < as.POSIXct(finalDate, format = "%m/%d/%Y %H:%M:%S"))
-  return(qplot(paste(dataset$user,dataset$jobname), data = dataset, geom = "bar",xlab="user and jobname",color=status))
+  dataset<-subset(dataset,user == nuser & jobname == jname & Ncpu == ncpu & Record == lRecord & Fecha > as.POSIXct(initialDate, format = "%m/%d/%Y %H:%M:%S") & Fecha < as.POSIXct(finalDate, format = "%m/%d/%Y %H:%M:%S"))
+  return(qplot(paste(dataset$user,dataset$jobname), data = dataset, geom = "bar",xlab="user and jobname",color=Record))
 }
 
 

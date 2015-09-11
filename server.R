@@ -49,6 +49,8 @@ shinyServer(function(input, output,session) {
   
   output$seriedetiempo <- renderPlot({
    
+    Data
+    
   })
   
 })
