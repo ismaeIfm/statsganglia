@@ -4,7 +4,7 @@ source("utils.R")
 
 
 #Reads the files in the directory
-#accounting <- ReadDirectory("accounting/")
+accounting <- ReadDirectory("../accounting/")
 data<-GetDateMessageUserJobNcupsAndPpnByRange(accounting,as.character(accounting[1,1]),as.character(accounting[length(accounting$date),1]))
 
 shinyServer(function(input, output,session) {
