@@ -24,6 +24,7 @@ shinyServer(function(input, output,session) {
     updateCheckboxGroupInput(session,"select_checkncpu",choices = as.character(name))
   })
   
+  
   observe({
     name<-unique(data$user)
     updateSelectInput(session,"select_users",choices = as.character(name))
@@ -50,6 +51,10 @@ shinyServer(function(input, output,session) {
   
   output$histogramI<-renderPlot({
     userJobnameCountRecordPlot(data,input$select_checkusers,NULL,input$select_check,as.POSIXct(input$dates[1]),as.POSIXct(input$dates[2]))
+  })
+  
+  output$summary<-renderPrint({
+    getSummary(data,as.POSIXct(input$dates[1]),as.POSIXct(input$dates[2]))
   })
   
   output$timeserieA <- renderPlot({
