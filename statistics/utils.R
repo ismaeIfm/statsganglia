@@ -102,9 +102,13 @@ GetDateMessageUserJobNcupsAndPpnByRange<-function(data,initialDate,finalDate){
   data<-cbind(date,Node)
   data<-cbind(date,Ppn)
   data$m<-NULL
+  data$message<-NULL
   return(data)
 }
 
+#esta funcion que da fuera de uso temporalmente,el mensaje es eliminado en la funcion anterior
+#si se quiere habilitar el uso, comentar la linea en la funcion anterior en la que nos desasemos
+#del mensaje
 GetDateMessageUserJobNcupsPpnAndMemByRange<-function(data,initialDate,finalDate){
   data<-GetDateMessageUserJobNcupsAndPpnByRange(data,initialDate,finalDate)
   memExpr<-"resources[_]used.mem=[0-9]+[a-zA-Z]+"
@@ -156,4 +160,9 @@ userJobnameCountRecordPlot<-function(dataset,nuser,jname,lRecord,initialDate,fin
   return(qplot(paste(dataset$user,dataset$jobname), data = dataset, geom = "bar",xlab="user and jobname",color=Record))
 }
 
-
+getSummary<-function(data,initialDate,finalDate){
+  data<-subset(data,data$date > as.POSIXct(initialDate, format = "%m/%d/%Y %H:%M:%S")&
+                    data$date < as.POSIXct(finalDate, format = "%m/%d/%Y %H:%M:%S"),
+                    select = c(user,jobname,Ncpu,Ppn))
+  return(summary(data))
+}

@@ -12,6 +12,8 @@ shinyUI(fluidPage(
     mainPanel(
         tabsetPanel(
             tabPanel("Actividad General",
+                        h4("Resumen estadistico"),
+                        verbatimTextOutput("summary"),
                         checkboxGroupInput("select_check",label = h3("Record"),choices =c(" ")),
                         checkboxGroupInput("select_checkusers",label = h3("Users"),choices =c(" ")),
                         checkboxGroupInput("select_checkncpu",label = h3("Num Cpu"),choices=c(" ")),
