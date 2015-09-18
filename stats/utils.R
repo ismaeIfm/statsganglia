@@ -452,6 +452,9 @@ GetUsers <- function(preprocessed.data){
   return(sort(unique(preprocessed.data$User)))
 }
 
+GetJobsIDsFromPreprocessedData <- function(preprocessed.data){
+  return(sort(unique(preprocessed.data$Jobid)))
+}
 
 PlotDataSummary <- function(data) {
   # Plots a histogram of the data classified by message type. The plot is 
