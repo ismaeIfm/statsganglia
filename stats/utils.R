@@ -344,7 +344,7 @@ GetInformationByJobID <- function(data, jobid){
   #print(etime)
   
   
-  execHost <- GetExecHostsFromData(dataByJobID)
+  execHost <- paste(GetExecHostsFromData(dataByJobID))
   #print("exech: ")
   #print(execHost)
   
@@ -422,6 +422,7 @@ GetPreprocessedData <- function(data){
   ids <- GetJobsIDsFromData(data)
   preprocessedData <- data.frame()
   for (i in ids) {
+    print(i)
     preprocessedData <- rbind(preprocessedData, GetInformationByJobID(data, i), deparse.level = 1)
   }
   return(preprocessedData)
