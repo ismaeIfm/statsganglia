@@ -4,4 +4,8 @@
 accounting
 *zip 
 *~
- statistics/.DS* 
+*/.DS* 
+*#*
+.DS*
+
+
