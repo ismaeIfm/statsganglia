@@ -2,7 +2,7 @@
 \lyxformat 474
 \begin_document
 \begin_header
-\textclass article
+\textclass book
 \use_default_options true
 \maintain_unincluded_children false
 \language english
@@ -25,9 +25,10 @@
 \bibtex_command default
 \index_command default
 \paperfontsize default
+\spacing single
 \use_hyperref false
 \papersize default
-\use_geometry false
+\use_geometry true
 \use_package amsmath 1
 \use_package amssymb 1
 \use_package cancel 1
@@ -51,8 +52,8 @@
 \shortcut idx
 \color #008000
 \end_index
-\secnumdepth 3
-\tocdepth 3
+\secnumdepth 2
+\tocdepth 2
 \paragraph_separation indent
 \paragraph_indentation default
 \quotes_language english
@@ -67,6 +68,51 @@
 \end_header
 
 \begin_body
+
+\begin_layout Title
+Reporte técnico: Implementación y creación de un sistema de reporteo de
+ información de uso utilizando bitácoras del sistema Torque/PBS y Ganglia.
+\end_layout
+
+\begin_layout Author
+Carlos E.
+ López Natarén, J.
+ Ismael Fernández Martínez y Alberto Cano Ortiz
+\end_layout
+
+\begin_layout Section*
+Introducción
+\end_layout
+
+\begin_layout Standard
+Durante ya poco más de una década, una buena parte de la planta de investigadore
+s y estudiantes del instituto de física han utilizado los clusters de alto
+ rendimiento, conforme hemos adquirido experiencia en el uso y mantenimiento
+ de estos se ha encontrado que es necesario el uso de estadísticas de uso
+ para tomar mejores decisiones respecto a áreas de oportunidad y de crecimiento
+ de la infraestructura de cómputo del instituto.
+ Es por eso que se ha utilizado desde hace un año Ganglia, con esta hemos
+ colectado información que nos dan un perfil del uso del cluster durante
+ el transcurso de este año, además ya que la gran mayoría de los trabajos
+ enviados al cluster es por medio de Torque/PBS (ver http://www.fisica.unam.mx/clus
+ters/mingus_manual.php para el manual de cómo enviar trabajos en este cluster)
+ hemos decidido hacer una versión 
+\begin_inset Quotes eld
+\end_inset
+
+in house
+\begin_inset Quotes erd
+\end_inset
+
+ de una herramienta que nos permita extraer información importante en forma
+ de estadísticas, más granulares y complementarias a las que nos proporciona
+ el propio Ganglia, hemos llamado a este proyecto Statsganglia.
+ 
+\end_layout
+
+\begin_layout Section*
+Ganglia
+\end_layout
 
 \begin_layout Standard
 Ganglia ofrece datos de medidas de rendimiento y un monitoreo rutinario
@@ -193,10 +239,6 @@ La siguiente imagen muestra como funciona gmetad con gmond.
 \end_layout
 
 \begin_layout Standard
-
-\end_layout
-
-\begin_layout Standard
 Gmetad extrae la descripcion XML de fuentes de datos de ganglia (gmonds
  o incluso gmetads) via rutas unicast.
  El comportameinto de gmetad es controlado por un archivo de configuración
@@ -229,6 +271,22 @@ nd/conf.php.
  encuentra el actual tema (Ganglia usa TemplatePower para implementar temas).
  Ademas se pueden modificar valores como los rangos de fechas o que metricas
  desplegar.
+\end_layout
+
+\begin_layout Section*
+Torque/PBS (Carlos: Descripción de cómo funciona en general )
+\end_layout
+
+\begin_layout Section*
+R/Shiny (Ismael: Cómo funciona)
+\end_layout
+
+\begin_layout Section*
+Creación de las estadísticas generales (Ismael)
+\end_layout
+
+\begin_layout Section*
+Creación de las estadísticas particulares por usuario (Alberto)
 \end_layout
 
 \end_body
