@@ -17,7 +17,7 @@ shinyUI(fluidPage(
                         checkboxGroupInput("select_check",label = h3("Record"),choices =c(" ")),
                         checkboxGroupInput("select_checkusers",label = h3("Users"),choices =c(" ")),
                         checkboxGroupInput("select_checkncpu",label = h3("Num Cpu"),choices=c(" ")),
-                        #plotOutput("timeserieI"),
+                        plotOutput("timeserieI"),
                         plotOutput("histogramI")
                         ),
             tabPanel("Actividad Usuarios", 
