@@ -466,6 +466,10 @@ set server record_job_script = True
 set server job_log_keep_days = 780
 \end_layout
 
+\begin_layout Subsection*
+Archivos de bitácoras de Torque/PBS (Carlos)
+\end_layout
+
 \begin_layout Section*
 R/Shiny (Ismael: Cómo funciona)
 \end_layout
