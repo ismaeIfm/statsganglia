@@ -277,6 +277,195 @@ nd/conf.php.
 Torque/PBS (Carlos: Descripción de cómo funciona en general )
 \end_layout
 
+\begin_layout Standard
+El uso de Torque/PBS ha sido documentado en varias partes del manual de
+ mingus, principalmente en la página de clusters del instituto, en la página
+ de manuales (http://www.fisica.unam.mx/clusters/mingus_manual.php), la configuració
+n actual del scheduler es la siguiente:
+\end_layout
+
+\begin_layout LyX-Code
+Max open servers: 10239 
+\end_layout
+
+\begin_layout LyX-Code
+Qmgr: p s 
+\end_layout
+
+\begin_layout LyX-Code
+# # Create queues and set their attributes.
+ 
+\end_layout
+
+\begin_layout LyX-Code
+#
+\end_layout
+
+\begin_layout LyX-Code
+#
+\end_layout
+
+\begin_layout LyX-Code
+# Create and define queue medium 
+\end_layout
+
+\begin_layout LyX-Code
+# 
+\end_layout
+
+\begin_layout LyX-Code
+create queue medium 
+\end_layout
+
+\begin_layout LyX-Code
+set queue medium queue_type = Execution 
+\end_layout
+
+\begin_layout LyX-Code
+set queue medium max_user_queuable = 174 
+\end_layout
+
+\begin_layout LyX-Code
+set queue medium resources_max.ncpus = 176 
+\end_layout
+
+\begin_layout LyX-Code
+set queue medium resources_max.nodect = 200 
+\end_layout
+
+\begin_layout LyX-Code
+set queue medium resources_min.cput = 00:00:01 
+\end_layout
+
+\begin_layout LyX-Code
+set queue medium resources_min.ncpus = 1 
+\end_layout
+
+\begin_layout LyX-Code
+set queue medium resources_min.nodect = 1 
+\end_layout
+
+\begin_layout LyX-Code
+set queue medium resources_min.walltime = 00:00:01 
+\end_layout
+
+\begin_layout LyX-Code
+set queue medium resources_default.cput = 1920:00:00 
+\end_layout
+
+\begin_layout LyX-Code
+set queue medium resources_default.ncpus = 1 
+\end_layout
+
+\begin_layout LyX-Code
+set queue medium resources_default.neednodes = medium 
+\end_layout
+
+\begin_layout LyX-Code
+set queue medium resources_default.nodect = 1 
+\end_layout
+
+\begin_layout LyX-Code
+set queue medium resources_default.walltime = 24:00:00 
+\end_layout
+
+\begin_layout LyX-Code
+set queue medium resources_available.ncpus = 176 
+\end_layout
+
+\begin_layout LyX-Code
+set queue medium resources_available.nodect = 200 
+\end_layout
+
+\begin_layout LyX-Code
+set queue medium max_user_run = 174 
+\end_layout
+
+\begin_layout LyX-Code
+set queue medium enabled = True 
+\end_layout
+
+\begin_layout LyX-Code
+set queue medium started = True 
+\end_layout
+
+\begin_layout LyX-Code
+#
+\end_layout
+
+\begin_layout LyX-Code
+# Set server attributes.
+ 
+\end_layout
+
+\begin_layout LyX-Code
+#
+\end_layout
+
+\begin_layout LyX-Code
+set server scheduling = True 
+\end_layout
+
+\begin_layout LyX-Code
+set server acl_hosts = mingus 
+\end_layout
+
+\begin_layout LyX-Code
+set server managers = root@mingus 
+\end_layout
+
+\begin_layout LyX-Code
+set server operators = root@mingus 
+\end_layout
+
+\begin_layout LyX-Code
+set server default_queue = medium 
+\end_layout
+
+\begin_layout LyX-Code
+set server log_events = 511 
+\end_layout
+
+\begin_layout LyX-Code
+set server mail_from = adm 
+\end_layout
+
+\begin_layout LyX-Code
+set server scheduler_iteration = 600 
+\end_layout
+
+\begin_layout LyX-Code
+set server node_check_rate = 150 
+\end_layout
+
+\begin_layout LyX-Code
+set server tcp_timeout = 6 
+\end_layout
+
+\begin_layout LyX-Code
+set server mom_job_sync = True 
+\end_layout
+
+\begin_layout LyX-Code
+set server keep_completed = 60 
+\end_layout
+
+\begin_layout LyX-Code
+set server next_job_number = 40953 
+\end_layout
+
+\begin_layout LyX-Code
+set server record_job_info = True 
+\end_layout
+
+\begin_layout LyX-Code
+set server record_job_script = True 
+\end_layout
+
+\begin_layout LyX-Code
+set server job_log_keep_days = 780
+\end_layout
+
 \begin_layout Section*
 R/Shiny (Ismael: Cómo funciona)
 \end_layout
