@@ -482,5 +482,147 @@ Creación de las estadísticas generales (Ismael)
 Creación de las estadísticas particulares por usuario (Alberto)
 \end_layout
 
+\begin_layout Standard
+Despues de haber limpiado partes claves del mensage que es arrojado en casa
+ unos de los registros log del calendarizador se crearon las sieguientes
+ series de tiempo.
+\end_layout
+
+\begin_layout Standard
+Fue creada una serie de tiempo de los nodos, donde estos ademas son agrupados
+ por el estado en el que se encuentran
+\end_layout
+
+\begin_layout Standard
+se espera que facilite el analisis de frecuencia de fallos en cada unos
+ de los nodos.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename 1.jpg
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Fue creada una serie de tiempo de los trabajos por usuario, donde ademas
+ estos mismos son agrupados por el estado 
+\end_layout
+
+\begin_layout Standard
+en el que se encuentran, mostrara en cada punto la frecuencia de los fallos.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename 2.jpg
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+fe creado un histograma que muestra el numero de trabajos de cada usuario
+ agrupado por el estado del trabajo
+\end_layout
+
+\begin_layout Standard
+del usuario, complementa la información de la serie de tiempo pasada.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename 3.jpg
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \end_body
 \end_document
