@@ -409,7 +409,7 @@ GetInformationByJobID <- function(data, jobid){
 #  print(usedWalltime)
   
   
-  requestor <- GetRequestorsFromData(dataByJobID)
+  requestor <- GetRequestorsFromData(dataByJobID)[1]
   
   dtime <- GetDeletedTimesFromData(dataByJobID)[1]
 
