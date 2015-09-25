@@ -474,6 +474,17 @@ Archivos de bitácoras de Torque/PBS (Carlos)
 R/Shiny (Ismael: Cómo funciona)
 \end_layout
 
+\begin_layout Standard
+Shiny es un paquete de R que hace fácil el crear aplicaciones web interactivas
+ llamadas apps directamente desde R.
+ Para instalar shiny se debe abrir una sesión en R, estar conectado a internet
+ y correr:
+\end_layout
+
+\begin_layout Standard
+> install.packages("shiny") 
+\end_layout
+
 \begin_layout Section*
 Creación de las estadísticas generales (Ismael)
 \end_layout
