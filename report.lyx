@@ -158,7 +158,7 @@ lidad y portabilidad.
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename ganglia.png
+	filename img/ganglia.png
 
 \end_inset
 
@@ -232,10 +232,6 @@ Las configuraciones por defecto trabajaran en la mayoria de los clusters.
 \end_deeper
 \begin_layout Itemize
 gmetad (Ganglia Meta Daemon):
-\end_layout
-
-\begin_layout Standard
-La siguiente imagen muestra como funciona gmetad con gmond.
 \end_layout
 
 \begin_layout Standard
@@ -481,12 +477,304 @@ Shiny es un paquete de R que hace fácil el crear aplicaciones web interactivas
  y correr:
 \end_layout
 
+\begin_layout Itemize
+
+\emph on
+install.packages("shiny")
+\emph default
+ 
+\end_layout
+
 \begin_layout Standard
-> install.packages("shiny") 
+Las apps de Shiny están compuestas por:
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+ui.R
+\emph default
+: un script usuario-interfaz (controla el diseño y la apariencia de la app).
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+server.R
+\emph default
+: un script servidor (contiene las instrucciones que la computadora necesita
+ para construir la app).
+\end_layout
+
+\begin_layout Standard
+Es importante notar que se puede añadir contenido HTML a las apps de Shiny.
+ Se puede crear una app de Shiny al crear un nuevo directorio y guardar
+ los archivos 
+\emph on
+ui.R
+\emph default
+ y 
+\emph on
+server.R
+\emph default
+ en él.
+ Para ejecutar una app se debe dar el nombre de su directorio como argumento
+ a la funcion 
+\emph on
+runApp
+\emph default
+, por ejemplo si nuestra aplicación se encuentra en el directorio llamado
+ 
+\emph on
+my_app, 
+\emph default
+la ejecutariamos desde una sesión de R de la siguiente manera:
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+library(shiny)
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+runApp(
+\begin_inset Quotes eld
+\end_inset
+
+my_app
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Standard
+Una app de Shiny es simplemente una aplicación web creada en R.
+ Shiny esta basado en un modelo de programación reactivo, similar al de
+ las hojas de cálculo.
+ Con Shiny se pueden hacer ánalisis de datos reactivos, accesibles a cualquiera
+ con navegador web.
 \end_layout
 
 \begin_layout Section*
 Creación de las estadísticas generales (Ismael)
+\end_layout
+
+\begin_layout Standard
+Primero se limpio la base datos, es decir se creo un tabla, donde cada renglón
+ reprensenta un trabajo y toda su información, es decir toda la información
+ obtenida de los archivos de bitácoras.
+ Para realizar esto se contruyeron expresiones regulares:
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+kNameExpression <- "[a-zA-Z.0-9
+\backslash
+
+\backslash
+_
+\backslash
+
+\backslash
+-@]+"
+\emph default
+ (Expresión para nombres)
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+kFileExpression <- "[a-zA-Z.0-9
+\backslash
+
+\backslash
+_
+\backslash
+
+\backslash
+-
+\backslash
+
+\backslash
+/@]+"
+\emph default
+ (Expresión para nombres de archivos y directorios)
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+kNumberExpression <- "[0-9]+"
+\emph default
+ (Expresión para números)
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+KTimeExpression <- "[0-9]+:[0-9]+:[0-9]+"
+\emph default
+ (Expresión para cantidades de tiempo)
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+KMemAmountExpression <- "[0-9]+(m|M|k|K|g|G|t|T)*(b|B)"
+\emph default
+ (Expresión para cantidades de memoria)
+\end_layout
+
+\begin_layout Standard
+Las cuales se usuaron para extraer los campos
+\emph on
+ Jobid, Jobname, User, Group, Owner, Queue, Start, End, ctime, qtime, etime,
+ execHost, listCPUT, listMem, listNCPUs, listNeedNode, listNodeCT, listWalltime,
+ session, exitStatus, usedCPUT, usedMem, usedVMem, usedWalltime, requestor,
+ dtime.
+
+\emph default
+ Debido a que el 
+\emph on
+Jobid 
+\emph default
+es el identificador único para los trabajos se uso como llave para manejar
+ la información, es decir manipular la base de datos.
+\end_layout
+
+\begin_layout Standard
+Una vez limpios los datos se diseño una interfaz para desplegar la información
+ de manera interactiva (
+\emph on
+ui.R
+\emph default
+) y se contruyeron las funciones necesarias para manipular la información
+ en 
+\emph on
+server.R 
+\emph default
+y la funciones para realizar cálculos y graficas en 
+\emph on
+utils.R
+\emph default
+.
+ Se hizo uso de expressiones reactivas para prevenir calculos innecesarios
+ y dar mayor rápidez y fluidez a la aplicación.
+\end_layout
+
+\begin_layout Standard
+En la interfaz se contruyo un panel con tres pestañas: 
+\emph on
+
+\begin_inset Quotes eld
+\end_inset
+
+Resumen
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+Usuario
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+Trabajo
+\begin_inset Quotes erd
+\end_inset
+
+
+\emph default
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename img/interface.png
+	width 10cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+La información desplegada en esos paneles será en función de los rangos
+ de fecha seleccionados en la parte superior.
+\end_layout
+
+\begin_layout Itemize
+Resumen:
+\end_layout
+
+\begin_layout Standard
+La pestaña resumen muestra los tipos mensajes de las bitácoras en el rango
+ de fecha especificado, además muestra el número de trabajos activos en
+ ese periodo y un histograma de los usuarios activos en ese periodo.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename img/histogram_users.png
+	width 10cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Usuarios:
+\end_layout
+
+\begin_layout Standard
+La pestaña usuarios muestra la actividad de cada usuario, el usuario es
+ elegido en un selector y muestra los mensajes asociados a cada usuario,
+ además de el número de trabajos pertenecientes a ese usuario, así como
+ toda la información de cada trabajo de ese usuario.
+ Los usuarios disponibles en el selector, asi como la información despeglada
+ de cada usuario van en función de los rangos de fechas seleccionados.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename img/users.png
+	width 10cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Trabajos:
+\end_layout
+
+\begin_layout Standard
+La pestaña Trabajos muestra la información de cada trabajo, en la parte
+ superior se encuetra un selector el cual nos permite selectionar todos
+ los trabajos si su actividad se encuentra en el rango de fechas establecidos.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename img/jobs.png
+	width 10cm
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section*
@@ -494,7 +782,7 @@ Creación de las estadísticas particulares por usuario (Alberto)
 \end_layout
 
 \begin_layout Standard
-Despues de haber limpiado partes claves del mensage que es arrojado en casa
+Despues de haber limpiado partes claves del mensage que es arrojado en cada
  unos de los registros log del calendarizador se crearon las sieguientes
  series de tiempo.
 \end_layout
@@ -507,7 +795,7 @@ Fue creada una serie de tiempo de los nodos, donde estos ademas son agrupados
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename 1.jpg
+	filename img/1.jpg
 	lyxscale 20
 	width 15cm
 	height 5cm
@@ -525,7 +813,7 @@ Fue creada una serie de tiempo de los trabajos por usuario, donde ademas
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename 2.jpg
+	filename img/2.jpg
 	lyxscale 20
 	width 15cm
 	height 5cm
@@ -543,7 +831,7 @@ fue creado un histograma que muestra el numero de trabajos de cada usuario
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename 3.jpg
+	filename img/3.jpg
 	lyxscale 20
 	width 15cm
 	height 5cm
